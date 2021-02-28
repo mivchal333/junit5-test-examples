@@ -1,6 +1,8 @@
 package bank;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -8,7 +10,7 @@ public class BankImpl implements Bank {
     private final Map<Long, Account> db;
 
     public BankImpl() {
-        this.db = BankDatabase.getDB();
+        this.db = Collections.synchronizedMap(new HashMap<>());
     }
 
     @Override
