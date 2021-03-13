@@ -17,7 +17,7 @@ public interface Bank {
      *
      * @param name    imię i nazwisko właściciela
      * @param address adres właściciela
-     * @return id konta lub null, gdy brak konta o podanych parametrach
+     * @return id konta lub null gdy brak konta o podanych parametrach
      */
     Long findAccount(String name, String address);
 
@@ -26,7 +26,7 @@ public interface Bank {
      *
      * @param id
      * @param amount srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
+     * @throws AccountIdException gdy id konta jest nieprawidlowe
      */
     void deposit(Long id, BigDecimal amount);
 
@@ -35,7 +35,7 @@ public interface Bank {
      *
      * @param id
      * @return srodki
-     * @throws AccountIdException, gdy id konta jest nieprawidlowe
+     * @throws AccountIdException gdy id konta jest nieprawidlowe
      */
     BigDecimal getBalance(Long id);
 
@@ -44,9 +44,9 @@ public interface Bank {
      *
      * @param id
      * @param amount srodki
-     * @throws AccountIdException,         gdy id konta jest nieprawidlowe
-     * @throws InsufficientFundsException, gdy srodki na koncie nie sa
-     *                                     wystarczajace do wykonania operacji
+     * @throws AccountIdException         gdy id konta jest nieprawidlowe
+     * @throws InsufficientFundsException gdy srodki na koncie nie sa
+     *                                    wystarczajace do wykonania operacji
      */
     void withdraw(Long id, BigDecimal amount);
 
@@ -56,9 +56,9 @@ public interface Bank {
      * @param idSource
      * @param idDestination
      * @param amount        srodki
-     * @throws AccountIdException,         gdy id konta jest nieprawidlowe
-     * @throws InsufficientFundsException, gdy srodki na koncie nie sa
-     *                                     wystarczajace do wykonania operacji
+     * @throws AccountIdException         ,         gdy id konta jest nieprawidlowe
+     * @throws InsufficientFundsException gdy srodki na koncie nie sa
+     *                                    wystarczajace do wykonania operacji
      */
     void transfer(Long idSource, Long idDestination, BigDecimal amount);
 
