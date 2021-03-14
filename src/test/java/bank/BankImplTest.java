@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-class BankImplTest {
+public class BankImplTest {
     private Bank bank;
     long invalidId = 99999L;
 
