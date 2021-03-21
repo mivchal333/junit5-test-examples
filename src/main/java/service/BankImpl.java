@@ -2,9 +2,14 @@ package service;
 
 import dao.AccountDao;
 import dao.AccountDaoImpl;
+import dao.AccountOperationDao;
+import dao.AccountOperationDaoImpl;
 import model.Account;
+import model.AccountOperation;
+import model.OperationType;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -13,10 +18,12 @@ public class BankImpl implements Bank {
             Logger.getLogger(BankImpl.class.getName());
 
     private final AccountDao accountDao;
+    private final AccountOperationDao accountOperationDao;
 
     public BankImpl() {
         log.info("Creating bank instance");
         accountDao = new AccountDaoImpl();
+        accountOperationDao = new AccountOperationDaoImpl();
     }
 
     @Override
@@ -48,11 +55,16 @@ public class BankImpl implements Bank {
     @Override
     public void deposit(Long id, BigDecimal amount) {
         log.fine("Deposit to account");
+
         accountDao.findById(id);
         Account account = getAccount(id);
         account.addBalance(amount);
 
         accountDao.update(account);
+
+        AccountOperation operation = new AccountOperation(account, amount, OperationType.DEPOSIT);
+        accountOperationDao.save(operation);
+
         log.fine("Deposit finished successfully");
     }
 
@@ -74,6 +86,9 @@ public class BankImpl implements Bank {
         }
         account.subtractBalance(amount);
         accountDao.update(account);
+        AccountOperation operation = new AccountOperation(account, amount, OperationType.WITHDRAW);
+
+        accountOperationDao.save(operation);
         log.fine("Withdraw finished");
     }
 
@@ -96,8 +111,23 @@ public class BankImpl implements Bank {
 
         accountDao.update(source);
         accountDao.update(destination);
+
+        AccountOperation operation = new AccountOperation(source, destination, amount, OperationType.TRANSFER);
+
+        accountOperationDao.save(operation);
         log.fine("Transfer finished successfully");
 
+    }
+
+    @Override
+    public AccountOperation getLastOperation(Long accountId) {
+        return null;
+    }
+
+    @Override
+    public List<AccountOperation> getOperations(Long accountId) {
+        Account account = getAccount(accountId);
+        return accountOperationDao.findByAccountId(account);
     }
 
     private Account getAccount(Long id) {

@@ -1,6 +1,9 @@
 package service;
 
+import model.AccountOperation;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface Bank {
     /**
@@ -61,6 +64,10 @@ public interface Bank {
      *                                    wystarczajace do wykonania operacji
      */
     void transfer(Long idSource, Long idDestination, BigDecimal amount);
+
+    AccountOperation getLastOperation(Long accountId);
+
+    List<AccountOperation> getOperations(Long accountId);
 
     class InsufficientFundsException extends RuntimeException {
     }

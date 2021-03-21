@@ -1,10 +1,13 @@
 package service;
 
+import model.AccountOperation;
+import model.OperationType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class BankImplTest {
     private Bank bank;
@@ -65,6 +68,9 @@ public class BankImplTest {
         Assertions.assertThrows(Bank.AccountIdException.class, () -> {
             bank.deposit(invalidId, BigDecimal.ONE);
         });
+
+        List<AccountOperation> operations = bank.getOperations(account);
+        Assertions.assertEquals(3, operations.size());
     }
 
     @Test
@@ -138,5 +144,27 @@ public class BankImplTest {
         // InsufficientFundsException when amount bigger than available
         Assertions.assertThrows(Bank.InsufficientFundsException.class, () ->
                 bank.transfer(account1, account2, BigDecimal.TEN));
+    }
+
+    @Test
+    void operationsListTest() {
+        String address = "address";
+        String name = "name";
+        Long accountId = bank.createAccount(name, address);
+
+        List<AccountOperation> operations1 = bank.getOperations(accountId);
+        Assertions.assertEquals(0, operations1.size());
+
+        BigDecimal depositAmount = BigDecimal.TEN;
+        bank.deposit(accountId, depositAmount);
+
+        List<AccountOperation> operations2 = bank.getOperations(accountId);
+
+        Assertions.assertEquals(1, operations2.size());
+
+        AccountOperation depositOperation = operations2.get(0);
+
+        Assertions.assertEquals(depositAmount, depositOperation.getAmount());
+        Assertions.assertEquals(OperationType.DEPOSIT, depositOperation.getType());
     }
 }

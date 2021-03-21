@@ -18,6 +18,7 @@ public class App {
 
         bank.getBalance(accountID);
 
-        bank.withdraw(accountID, BigDecimal.TEN);
+        bank.getOperations(accountID);
+
     }
 }

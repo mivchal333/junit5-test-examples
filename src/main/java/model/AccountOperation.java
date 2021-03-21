@@ -1,15 +1,16 @@
 package model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountOperation extends AbstractModel {
     @ManyToOne
     private Account source;
@@ -17,8 +18,11 @@ public class AccountOperation extends AbstractModel {
     private Account destination;
     private BigDecimal amount;
     private OperationType type;
-}
-enum OperationType {
-    DEPOSIT, TRANSFER, WITHDRAW
+
+    public AccountOperation(Account source, BigDecimal amount, OperationType type) {
+        this.source = source;
+        this.amount = amount;
+        this.type = type;
+    }
 }
 
