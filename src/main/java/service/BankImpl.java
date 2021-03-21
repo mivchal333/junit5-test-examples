@@ -1,7 +1,7 @@
 package service;
 
 import dao.AccountDao;
-import dao.jdbc.AccountDaoJdbcImpl;
+import dao.AccountDaoImpl;
 import model.Account;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ public class BankImpl implements Bank {
 
     public BankImpl() {
         log.info("Creating bank instance");
-        accountDao = new AccountDaoJdbcImpl();
+        accountDao = new AccountDaoImpl();
     }
 
     @Override

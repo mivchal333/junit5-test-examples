@@ -1,6 +1,5 @@
 package dao;
 
-import dao.jdbc.AccountDaoJdbcImpl;
 import model.Account;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +17,7 @@ class AccountDaoTest {
 
     @BeforeEach
     private void setUp() {
-        accountDao = new AccountDaoJdbcImpl();
+        accountDao = new AccountDaoImpl();
     }
 
     @AfterEach
@@ -47,7 +46,10 @@ class AccountDaoTest {
         accountDao.update(account);
 
         Account updatedAccount = accountDao.findById(account.getId()).get();
-        Assertions.assertEquals(account, updatedAccount);
+        Assertions.assertEquals(account.getId(), updatedAccount.getId());
+        Assertions.assertEquals(account.getName(), updatedAccount.getName());
+        Assertions.assertEquals(account.getAddress(), updatedAccount.getAddress());
+        Assertions.assertEquals(account.getBalance(), updatedAccount.getBalance());
     }
 
     @Test
@@ -65,7 +67,6 @@ class AccountDaoTest {
     void findExistingById() {
         Account account = new Account("name1", "address1");
         accountDao.save(account);
-        Assertions.assertNotNull(account.getId());
 
         Optional<Account> existingByIdOpt = accountDao.findById(account.getId());
         Assertions.assertTrue(existingByIdOpt.isPresent());
@@ -97,8 +98,6 @@ class AccountDaoTest {
         Account account = new Account(name1, address1);
         accountDao.save(account);
 
-        Optional<Account> byNameAndAddress = accountDao.findByNameAndAddress(name1, address1);
 
-        Assertions.assertFalse(byNameAndAddress.isPresent());
     }
 }
