@@ -1,9 +1,10 @@
-package bank;
+package service;
+
+import dao.AccountDao;
+import dao.jdbc.AccountDaoJdbcImpl;
+import model.Account;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -11,34 +12,35 @@ public class BankImpl implements Bank {
     private final static Logger log =
             Logger.getLogger(BankImpl.class.getName());
 
-    private final Map<Long, Account> db;
+    private final AccountDao accountDao;
 
     public BankImpl() {
         log.info("Creating bank instance");
-        this.db = Collections.synchronizedMap(new HashMap<>());
+        accountDao = new AccountDaoJdbcImpl();
     }
 
     @Override
     public Long createAccount(String name, String address) {
         log.fine("Starting create account");
-        long nextId = db.size();
-        Account account = new Account(nextId, name, address);
+        Account account = new Account(name, address);
 
-        db.put(account.getId(), account);
+        accountDao.save(account);
+
         log.fine("Account successfully created");
-        return nextId;
+
+        return account.getId();
     }
 
     @Override
     public Long findAccount(String name, String address) {
         log.fine("Finding account by name and address");
-        Optional<Account> accountOpt = db.values().stream()
-                .filter(account -> account.getName().equals(name))
-                .filter(account -> account.getAddress().equals(address))
-                .findFirst();
+
+        Optional<Account> foundByNameAndAddress = accountDao.findByNameAndAddress(name, address);
 
         log.fine("Account find ended");
-        return accountOpt.map(Account::getId)
+
+        return foundByNameAndAddress
+                .map(Account::getId)
                 .orElse(null);
 
     }
@@ -46,8 +48,11 @@ public class BankImpl implements Bank {
     @Override
     public void deposit(Long id, BigDecimal amount) {
         log.fine("Deposit to account");
+        accountDao.findById(id);
         Account account = getAccount(id);
         account.addBalance(amount);
+
+        accountDao.update(account);
         log.fine("Deposit finished successfully");
     }
 
@@ -68,6 +73,7 @@ public class BankImpl implements Bank {
             throw new InsufficientFundsException();
         }
         account.subtractBalance(amount);
+        accountDao.update(account);
         log.fine("Withdraw finished");
     }
 
@@ -87,12 +93,15 @@ public class BankImpl implements Bank {
         source.subtractBalance(amount);
 
         destination.addBalance(amount);
+
+        accountDao.update(source);
+        accountDao.update(destination);
         log.fine("Transfer finished successfully");
 
     }
 
     private Account getAccount(Long id) {
-        Optional<Account> accountOpt = Optional.ofNullable(db.get(id));
+        Optional<Account> accountOpt = accountDao.findById(id);
         if (!accountOpt.isPresent()) {
             log.severe("Account doesn't exist!");
             throw new AccountIdException();

@@ -1,4 +1,4 @@
-package bank;
+package model;
 
 import lombok.Data;
 
@@ -11,8 +11,14 @@ public class Account {
     private String address;
     private BigDecimal balance;
 
-    public Account(Long id, String name, String address) {
+    public Account() {
         this.id = id;
+        this.name = name;
+        this.address = address;
+        this.balance = BigDecimal.ZERO;
+    }
+
+    public Account(String name, String address) {
         this.name = name;
         this.address = address;
         this.balance = BigDecimal.ZERO;

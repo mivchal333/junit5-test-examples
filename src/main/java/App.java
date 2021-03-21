@@ -1,5 +1,5 @@
-import bank.Bank;
-import bank.BankImpl;
+import service.Bank;
+import service.BankImpl;
 
 import java.math.BigDecimal;
 
