@@ -1,23 +1,29 @@
 package model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @MappedSuperclass
+@Data
 public class AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    private Date createDate;
+    private Date updateDate;
 
-    public Long getId() {
-        return id;
+
+    @PrePersist
+    protected void onCreate() {
+        createDate = new Date();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @PreUpdate
+    protected void onUpdate() {
+        updateDate = new Date();
     }
 
     @Override

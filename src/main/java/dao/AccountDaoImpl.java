@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import model.Account;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -25,12 +25,7 @@ public class AccountDaoImpl extends GenericDaoJpaImpl<Account, Long> implements 
         CriteriaQuery<Account> byNameAndAddress = cq.select(rootEntry)
                 .where(namePredicate, addressPredicate);
 
-        try {
-            Account singleResult = em.createQuery(byNameAndAddress).getSingleResult();
-            return Optional.of(singleResult);
-        } catch (NoResultException e){
-            log.debug("Entries not found. Empty result.");
-        }
-        return Optional.empty();
+        List<Account> resultList = em.createQuery(byNameAndAddress).getResultList();
+        return resultList.stream().findFirst();
     }
 }

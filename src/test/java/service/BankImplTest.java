@@ -23,8 +23,6 @@ public class BankImplTest {
         String address = "address";
         String name = "name";
 
-        Assertions.assertNull(bank.findAccount(name, address));
-
         bank.createAccount(name, address);
 
         Assertions.assertNotNull(bank.findAccount(name, address));
