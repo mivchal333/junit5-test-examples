@@ -1,9 +1,11 @@
 package model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
@@ -12,11 +14,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountOperation extends AbstractModel {
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Account source;
     @ManyToOne
     private Account destination;
+    @Column(nullable = false)
     private BigDecimal amount;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private OperationType type;
 
     public AccountOperation(Account source, BigDecimal amount, OperationType type) {
