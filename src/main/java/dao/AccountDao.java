@@ -14,4 +14,8 @@ public interface AccountDao extends GenericDao<Account, Long> {
 
     List<Account> findByBalanceDescending(int limit);
 
+    List<Account> findByEmptyOperations();
+
+    List<Account> findByOperationsCount();
+
 }

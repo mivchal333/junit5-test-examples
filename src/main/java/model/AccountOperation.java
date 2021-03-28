@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(name = "AccountOperation.findByDateRange", query = "select ao from AccountOperation ao where ao.createDate between ?1 and ?2")
+@NamedQuery(name = "AccountOperation.findOftenOperationTypeForAccount", query = "select ao.type from AccountOperation ao where ao.source.id = ?1 group by ao.type order by count(ao.type) desc")
 public class AccountOperation extends AbstractModel {
     @ManyToOne(optional = false)
     private Account source;

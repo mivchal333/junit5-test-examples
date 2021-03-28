@@ -11,6 +11,8 @@ import java.util.List;
 @NamedQuery(name = "Account.searchByName", query = "select a from  Account a where a.name like ?1")
 @NamedQuery(name = "Account.findByBalanceRange", query = "select a from  Account a where a.balance between ?1 and ?2")
 @NamedQuery(name = "Account.findByBalanceDescending", query = "select a from  Account a order by a.balance desc")
+@NamedQuery(name = "Account.findByEmptyOperations", query = "select a from  Account a where a.operations is empty")
+@NamedQuery(name = "Account.findByOperationsCountDescending", query = "select a from  Account a group by a.id order by count(a.operations) desc ")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity

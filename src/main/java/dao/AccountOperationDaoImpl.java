@@ -2,13 +2,17 @@ package dao;
 
 import model.Account;
 import model.AccountOperation;
+import model.OperationType;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountOperationDaoImpl extends GenericDaoJpaImpl<AccountOperation, Long> implements AccountOperationDao {
     @Override
@@ -24,6 +28,24 @@ public class AccountOperationDaoImpl extends GenericDaoJpaImpl<AccountOperation,
         CriteriaQuery<AccountOperation> sourceOdDestinationQuery = cq.select(rootEntry)
                 .where(sourceOrDestinationPredicate);
 
-       return em.createQuery(sourceOdDestinationQuery).getResultList();
+        return em.createQuery(sourceOdDestinationQuery).getResultList();
+    }
+
+    @Override
+    public List<AccountOperation> findByDateRange(Date start, Date end) {
+        TypedQuery<AccountOperation> query = getEntityManager().createNamedQuery("AccountOperation.findByDateRange", AccountOperation.class);
+        query.setParameter(1, start);
+        query.setParameter(2, end);
+        return query.getResultList();
+    }
+
+    @Override
+    public Optional<OperationType> findOftenOperationForAccount(Long id) {
+        TypedQuery<OperationType> query = getEntityManager().createNamedQuery("AccountOperation.findOftenOperationTypeForAccount", OperationType.class);
+        query.setParameter(1, id);
+        query.setMaxResults(1);
+        return query.getResultList()
+                .stream()
+                .findFirst();
     }
 }

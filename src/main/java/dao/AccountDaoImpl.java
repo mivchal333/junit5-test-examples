@@ -39,4 +39,17 @@ public class AccountDaoImpl extends GenericDaoJpaImpl<Account, Long> implements 
         query.setMaxResults(limit);
         return query.getResultList();
     }
+
+    @Override
+    public List<Account> findByEmptyOperations() {
+        TypedQuery<Account> query = getEntityManager().createNamedQuery("Account.findByEmptyOperations", Account.class);
+        return query.getResultList();
+
+    }
+
+    @Override
+    public List<Account> findByOperationsCount() {
+        TypedQuery<Account> query = getEntityManager().createNamedQuery("Account.findByOperationsCountDescending", Account.class);
+        return query.getResultList();
+    }
 }

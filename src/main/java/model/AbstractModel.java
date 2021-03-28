@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 @MappedSuperclass
 @Data
@@ -18,7 +19,8 @@ public class AbstractModel {
 
     @PrePersist
     protected void onCreate() {
-        createDate = new Date();
+        createDate = Optional.ofNullable(createDate)
+                .orElse(new Date());
     }
 
     @PreUpdate
@@ -33,7 +35,7 @@ public class AbstractModel {
 
         AbstractModel that = (AbstractModel) o;
 
-        return Objects.equals(this.id,((AbstractModel) o).id);
+        return Objects.equals(this.id, ((AbstractModel) o).id);
     }
 
     @Override
