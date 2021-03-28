@@ -3,13 +3,14 @@ package model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@NamedQuery(name = "Account.findByNameAndAddress", query = "select a from  Account a where a.name = ?1 and a.address = ?2")
+@NamedQuery(name = "Account.searchByName", query = "select a from  Account a where a.name like ?1")
+@NamedQuery(name = "Account.findByBalanceRange", query = "select a from  Account a where a.balance between ?1 and ?2")
+@NamedQuery(name = "Account.findByBalanceDescending", query = "select a from  Account a order by a.balance desc")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity

@@ -2,9 +2,16 @@ package dao;
 
 import model.Account;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface AccountDao extends GenericDao<Account, Long> {
-    Optional<Account> findByNameAndAddress(String name, String address);
+    List<Account> findByNameAndAddress(String name, String address);
+
+    List<Account> searchByName(String name);
+
+    List<Account> findByBalanceRange(BigDecimal start, BigDecimal end);
+
+    List<Account> findByBalanceDescending(int limit);
 
 }

@@ -42,14 +42,15 @@ public class BankImpl implements Bank {
     public Long findAccount(String name, String address) {
         log.fine("Finding account by name and address");
 
-        Optional<Account> foundByNameAndAddress = accountDao.findByNameAndAddress(name, address);
+        List<Account> byNameAndAddress = accountDao.findByNameAndAddress(name, address);
 
         log.fine("Account find ended");
 
-        return foundByNameAndAddress
+        return byNameAndAddress
+                .stream()
                 .map(Account::getId)
+                .findFirst()
                 .orElse(null);
-
     }
 
     @Override
