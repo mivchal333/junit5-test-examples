@@ -1,29 +1,30 @@
 package service;
 
 import dao.AccountDao;
-import dao.AccountDaoImpl;
 import dao.AccountOperationDao;
-import dao.AccountOperationDaoImpl;
 import model.Account;
 import model.AccountOperation;
 import model.OperationType;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@Stateless
 public class BankImpl implements Bank {
     private final static Logger log =
             Logger.getLogger(BankImpl.class.getName());
 
-    private final AccountDao accountDao;
-    private final AccountOperationDao accountOperationDao;
+    @EJB
+    private AccountDao accountDao;
+    @EJB
+    private AccountOperationDao accountOperationDao;
 
     public BankImpl() {
         log.info("Creating bank instance");
-        accountDao = new AccountDaoImpl();
-        accountOperationDao = new AccountOperationDaoImpl();
     }
 
     @Override
@@ -51,6 +52,11 @@ public class BankImpl implements Bank {
                 .map(Account::getId)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<Account> findAllAccounts() {
+        return accountDao.findAll();
     }
 
     @Override

@@ -4,7 +4,9 @@ import model.Account;
 import model.AccountOperation;
 import model.OperationType;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,10 +16,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Stateless
 public class AccountOperationDaoImpl extends GenericDaoJpaImpl<AccountOperation, Long> implements AccountOperationDao {
+    @PersistenceContext(name = "PU")
+    private EntityManager entityManager;
+
     @Override
     public List<AccountOperation> findByAccountId(Account account) {
-        EntityManager em = getEntityManager();
+        EntityManager em = entityManager;
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<AccountOperation> cq = cb.createQuery(AccountOperation.class);
         Root<AccountOperation> rootEntry = cq.from(AccountOperation.class);
@@ -33,7 +39,7 @@ public class AccountOperationDaoImpl extends GenericDaoJpaImpl<AccountOperation,
 
     @Override
     public List<AccountOperation> findByDateRange(Date start, Date end) {
-        TypedQuery<AccountOperation> query = getEntityManager().createNamedQuery("AccountOperation.findByDateRange", AccountOperation.class);
+        TypedQuery<AccountOperation> query = entityManager.createNamedQuery("AccountOperation.findByDateRange", AccountOperation.class);
         query.setParameter(1, start);
         query.setParameter(2, end);
         return query.getResultList();
@@ -41,7 +47,7 @@ public class AccountOperationDaoImpl extends GenericDaoJpaImpl<AccountOperation,
 
     @Override
     public Optional<OperationType> findOftenOperationForAccount(Long id) {
-        TypedQuery<OperationType> query = getEntityManager().createNamedQuery("AccountOperation.findOftenOperationTypeForAccount", OperationType.class);
+        TypedQuery<OperationType> query = entityManager.createNamedQuery("AccountOperation.findOftenOperationTypeForAccount", OperationType.class);
         query.setParameter(1, id);
         query.setMaxResults(1);
         return query.getResultList()

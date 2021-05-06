@@ -1,5 +1,6 @@
 package service;
 
+import model.Account;
 import model.AccountOperation;
 
 import java.math.BigDecimal;
@@ -23,6 +24,8 @@ public interface Bank {
      * @return id konta lub null gdy brak konta o podanych parametrach
      */
     Long findAccount(String name, String address);
+
+    List<Account> findAllAccounts();
 
     /**
      * Dodaje srodki do konta.
